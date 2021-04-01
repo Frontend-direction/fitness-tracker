@@ -19,11 +19,6 @@ export class TraningService {
   }
 
   startExercise(selectedId: string) {
-    this.exersices.push({
-      ...this.runningExercise,
-      date: new Date(),
-      state: 'completed'
-    });
     this.runningExercise = this.availableExercise.find(ex => ex.id === selectedId);
     this.exercisesChanges.next({...this.runningExercise})
   }
@@ -42,9 +37,9 @@ export class TraningService {
     this.exersices.push({
       ...this.runningExercise,
       duration: this.runningExercise.duration * (progress / 100),
-      calories: this.runningExercise.duration * (progress / 100),
+      calories: this.runningExercise.calories * (progress / 100),
       date: new Date(),
-      state: 'completed'
+      state: 'cancelled'
     });
     this.runningExercise = null;
     this.exercisesChanges.next(null);
@@ -52,6 +47,10 @@ export class TraningService {
 
   getRunningExercise() {
     return {...this.runningExercise};
+  }
+
+  getCompletedOrCancelledExercises() {
+    return this.exersices.slice();
   }
 
 }
