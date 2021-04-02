@@ -4,47 +4,60 @@ import { Subject } from 'rxjs';
 
 import { AuthData } from "./auth-data.model";
 import { User } from "./user.model";
+import { AngularFireAuth } from '@angular/fire/auth';
+import { TraningService } from '../training/training.service';
 
 @Injectable()
 export class AuthService {
   authChange = new Subject<boolean>();
-  private user: User;
+  private isAuthentificated = false;
 
-  constructor(private router: Router) {}
+  constructor(
+    private router: Router,
+    private afAuth: AngularFireAuth,
+    private trainingServivice: TraningService,
+    ) {}
+
+  initAuthListeners() {
+    this.afAuth.authState.subscribe(user => {
+      if(user) {
+        this.authSuccessfully();
+      } else {
+        this.trainingServivice.cancelSubscriptions();
+        this.isAuthentificated =false
+        this.authChange.next(false);
+        this.router.navigate(['/login']);
+      }
+    })
+  }
 
   registerUser(authData: AuthData) {
-    this.user = {
-      email: authData.email,
-      userId: Math.round(Math.random() * 10000).toString() 
-    }
-
-    this.authSuccessfully();
+    this.afAuth.createUserWithEmailAndPassword(authData.email, authData.password)
+    .then(res => {
+      console.log(res);
+    })
+    .catch(err => console.log(err))
   }
 
   login(authData: AuthData) {
-    this.user = {
-      email: authData.email,
-      userId: Math.round(Math.random() * 10000).toString() 
-    }
-    this.authSuccessfully();
+    this.afAuth.signInWithEmailAndPassword(authData.email, authData.password)
+    .then(res => {
+      console.log(res);
+    })
+    .catch(err => console.log(err))
   }
 
   logout() {
-    this.user = null;
-    this.authChange.next(false);
-    this.router.navigate(['/login']);
-  }
-
-  getUser() {
-    return { ...this.user };
+    this.afAuth.signOut();
   }
 
   isAuth() {
-    return this.user;
+    return this.isAuthentificated;
   }
   
 
   private authSuccessfully() {
+    this.isAuthentificated = true;
     this.authChange.next(true);
     this.router.navigate(['/training']);
   }
