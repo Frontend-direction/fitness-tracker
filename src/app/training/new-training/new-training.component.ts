@@ -13,6 +13,7 @@ import { Subscription } from 'rxjs';
 export class NewTrainingComponent implements OnInit, OnDestroy {
   exercises: Exercise[];
   exersisesSubscription: Subscription;
+  isLoading = false;
 
   constructor(
     private trainingService: TraningService,
@@ -23,11 +24,15 @@ export class NewTrainingComponent implements OnInit, OnDestroy {
     .subscribe(exercises => {
       this.exercises = exercises;
     })
-    this.trainingService.fetchAvailableExercises();
+    this.fetchExercises();
   }
 
   ngOnDestroy(): void {
     this.exersisesSubscription.unsubscribe();
+  }
+
+  fetchExercises() {
+    this.trainingService.fetchAvailableExercises();
   }
 
   onStartTraning(form: NgForm) {
