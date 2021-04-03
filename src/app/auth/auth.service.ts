@@ -10,11 +10,12 @@ import { UIService } from '../shared/ui.service';
 import { Store } from '@ngrx/store';
 import * as fromRoot from '../app.reducer';
 import * as UI from '../shared/ui.actions';
+import * as Auth from './auth.actions';
 
 @Injectable()
 export class AuthService {
   authChange = new Subject<boolean>();
-  private isAuthentificated = false;
+  // private isAuthentificated = false;
 
   constructor(
     private router: Router,
@@ -30,8 +31,9 @@ export class AuthService {
         this.authSuccessfully();
       } else {
         this.trainingServivice.cancelSubscriptions();
-        this.isAuthentificated =false
-        this.authChange.next(false);
+        this.store.dispatch(new Auth.SetUnthenticated());
+        // this.isAuthentificated =false
+        // this.authChange.next(false);
         this.router.navigate(['/login']);
       }
     })
@@ -72,14 +74,13 @@ export class AuthService {
     this.afAuth.signOut();
   }
 
-  isAuth() {
-    return this.isAuthentificated;
-  }
+  // isAuth() {
+  //   return this.isAuthentificated;
+  // }
   
 
   private authSuccessfully() {
-    this.isAuthentificated = true;
-    this.authChange.next(true);
+    this.store.dispatch(new Auth.SetAuthenticated());
     this.router.navigate(['/training']);
   }
 }
