@@ -6,8 +6,8 @@ import { NewTrainingComponent } from './new-training/new-training.component';
 import { PastTrainingComponent } from './past-training/past-training.component';
 import { StopTraningComponent } from './current-training/stop-traning-component';
 import { SharedModule } from '../shared/shared.module';
-import { AngularFirestoreModule } from '@angular/fire/firestore';
 import { MatDialogModule } from '@angular/material/dialog';
+import { TrainingRouterModule } from './training-routing.module';
 
 @NgModule({
   declarations: [
@@ -18,9 +18,9 @@ import { MatDialogModule } from '@angular/material/dialog';
     StopTraningComponent
   ],
   imports: [
+    TrainingRouterModule,
     MatDialogModule,
     SharedModule,
-    AngularFirestoreModule,
   ],
   entryComponents: [StopTraningComponent]
 })
