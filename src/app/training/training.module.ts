@@ -8,6 +8,8 @@ import { StopTraningComponent } from './current-training/stop-traning-component'
 import { SharedModule } from '../shared/shared.module';
 import { MatDialogModule } from '@angular/material/dialog';
 import { TrainingRouterModule } from './training-routing.module';
+import { StoreModule } from '@ngrx/store';
+import { trainingReducer } from './training.reducer';
 
 @NgModule({
   declarations: [
@@ -21,6 +23,7 @@ import { TrainingRouterModule } from './training-routing.module';
     TrainingRouterModule,
     MatDialogModule,
     SharedModule,
+    StoreModule.forFeature('training', trainingReducer)
   ],
   entryComponents: [StopTraningComponent]
 })
